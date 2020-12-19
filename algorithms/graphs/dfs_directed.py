@@ -4,9 +4,11 @@ def dfs_directed_at(g, v):
 
     active: tracks vertices which have not finished exploring all their outgoing edges
     """
+    dfs_order = [v]
     g.set_vertex_field(v, active=True)
 
     for e in g.outgoing_edges(v):
+        
         if g.get_edge_field(*e, "explored") is False:
 
             g.set_edge_field(*e, explored=True)
@@ -18,12 +20,14 @@ def dfs_directed_at(g, v):
             if (isExplored is False) and (isActive is False):
                 # unexplored and inactive
                 g.set_edge_field(*e, label="discovery")
-                dfs_directed_at(g, w)
+                dfs_order += dfs_directed_at(g, w)
             elif isActive is True:
                 # explored and active
                 g.set_edge_field(*e, label="backedge")  # ancestor
             else:
                 # explored but inactive
                 g.set_edge_field(*e, label="forward/crossedge")  # descendant or sibling
+
+    return dfs_order
 
     g.set_vertex_field(v, explored=True, active=False)

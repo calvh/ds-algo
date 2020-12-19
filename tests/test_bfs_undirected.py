@@ -1,12 +1,9 @@
-from data_structures.AdjacencyListGraph import AdjacencyListGraph as Graph
-from string import ascii_uppercase
+from data_structures.AdjacencyListUndirectedGraph import AdjacencyListUndirectedGraph as Graph
 from algorithms.graphs.bfs_undirected import *
 
 g = Graph()
 
-for c in ascii_uppercase:
-    if c == "Q":
-        break
+for c in "ABCDEFGHIJKLMNOP":
     g.add_vertex(c, explored=False)
 
 g.add_edge("A", "B", explored=False)

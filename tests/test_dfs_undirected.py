@@ -1,12 +1,9 @@
-from data_structures.AdjacencyListGraph import AdjacencyListGraph as Graph
-from string import ascii_uppercase
+from data_structures.AdjacencyListUndirectedGraph import AdjacencyListUndirectedGraph as Graph
 from algorithms.graphs.dfs_undirected import *
 
 g = Graph()
 
-for c in ascii_uppercase:
-    if c == "Q":
-        break
+for c in "ABCDEFGHIJKLMNOP":
     g.add_vertex(c, explored=False)
 
 g.add_edge("A", "B", explored=False)
@@ -35,5 +32,6 @@ g.add_edge("L", "P", explored=False)
 g.add_edge("M", "N", explored=False)
 g.add_edge("O", "P", explored=False)
 
-dfs_undirected(g)
+dfs_order = dfs_undirected_at(g, "A")
 print(g)
+print(dfs_order)

@@ -14,10 +14,10 @@ def floyd_warshall(g):
 
         for i in [i for i in n if i != k]:
             for j in [j for j in n if (j != k and j != i)]:
-                if (g_prev.find_edge(v[i], v[k]) is not False) and (
-                    g_prev.find_edge(v[k], v[j]) is not False
+                if (g_prev.edge_exists(v[i], v[k]) is True) and (
+                    g_prev.edge_exists(v[k], v[j]) is True
                 ):
-                    if g_current.find_edge(v[i], v[j]) is False:
+                    if g_current.edge_exists(v[i], v[j]) is False:
                         g_current.add_edge(v[i], v[j])
 
         g_prev = g_current

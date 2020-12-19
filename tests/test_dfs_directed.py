@@ -27,5 +27,6 @@ g.add_edge("MIA", "DFW", explored=False)
 g.add_edge("MIA", "LAX", explored=False)
 g.add_edge("LAX", "ORD", explored=False)
 
-dfs_directed_at(g, "BOS")
+dfs_order = dfs_directed_at(g, "BOS")
 print(g)
+print(dfs_order)
