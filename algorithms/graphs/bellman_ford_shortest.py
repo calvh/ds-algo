@@ -3,6 +3,8 @@ import math
 
 def bellman_ford_shortest(g, v):
 
+    # todo store distance in dictionary
+
     # convenience functions
     def get_distance(vertex):
         return g.get_vertex_field(vertex, "distance")

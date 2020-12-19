@@ -4,6 +4,7 @@ from heapq import *
 import math
 
 
+# todo revisit and see if this is necessary
 @dataclass(order=True)
 class PrioritizedItem:
     priority: int
@@ -11,6 +12,8 @@ class PrioritizedItem:
 
 
 def dijkstra_shortest(g, v):
+
+    # todo store distance in dictionary
 
     # convenience functions
     def get_distance(vertex):
