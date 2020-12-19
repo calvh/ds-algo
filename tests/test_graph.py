@@ -17,4 +17,3 @@ g.set_edge_field(1, 2, weight=10)
 g.set_edge_field(2, 3, label="VISITED")
 
 print(g)
-print(g.get_vertices())

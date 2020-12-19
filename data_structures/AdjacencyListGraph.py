@@ -14,138 +14,150 @@ class AdjacencyListGraph:
         # undirected edges may be stored as (key1, key2) or (key2, key1)
         self.edges = edges
 
-    def add_vertex(self, key, element, **kwargs):
+    def add_vertex(self, *args, **kwargs):
+
+        if len(args) > 2:
+            raise ValueError(f"Too many arguments.")
+
+        v = args[0]
+        element = args[0] if len(args) == 1 else args[1]
 
         # only allow non-duplicate keys
-        if key in self.vertices:
-            raise ValueError(f"Vertex with key {key} already exists.")
+        if v in self.vertices:
+            raise ValueError(f"Vertex {v} already exists.")
 
         # todo update to z = x | y syntax when python 3.9 is available on ubuntu
-        self.vertices[key] = {"element": element, "in": set(), "out": set(), **kwargs}
+        self.vertices[v] = {"element": element, "in": set(), "out": set(), **kwargs}
 
-    def remove_vertex(self, key):
+    def remove_vertex(self, v):
 
         # check if vertex exists
-        if key not in self.vertices:
-            raise ValueError(f"Vertex with key {key} does not exist.")
+        if v not in self.vertices:
+            raise ValueError(f"Vertex {v} does not exist.")
 
         # find connected vertices and edge references
-        for v in self.vertices[key]["out"]:
-            self.vertices[v]["out"].remove(key)
+        for u in self.vertices[v]["out"]:
+            self.vertices[u]["out"].remove(v)
 
         # remove associated edges
-        for e in self.get_incident_edges(key):
+        for e in self.get_incident_edges(v):
             self.remove_edge(e[0], e[1])
 
-        return self.vertices.pop(key)
+        return self.vertices.pop(v)
 
-    def find_edge(self, key1, key2):
+    def find_edge(self, v1, v2):
 
         try:
-            return self.edges[(key1, key2)]
+            return self.edges[(v1, v2)]
         except KeyError:
             pass
 
         try:
-            return self.edges[(key2, key1)]
+            return self.edges[(v2, v1)]
         except KeyError:
             return False
 
-    def add_edge(self, key1, key2, **kwargs):
+    def add_edge(self, v1, v2, **kwargs):
 
         # check if vertices exist
-        if key1 not in self.vertices:
-            raise ValueError(f"Vertex {key1} does not exist.")
-        if key2 not in self.vertices:
-            raise ValueError(f"Vertex {key2} does not exist.")
+        if v1 not in self.vertices:
+            raise ValueError(f"Vertex {v1} does not exist.")
+        if v2 not in self.vertices:
+            raise ValueError(f"Vertex {v2} does not exist.")
 
         # check if edge already exists
-        if self.find_edge(key1, key2) is not False:
-            raise ValueError(f"Edge ({key1}, {key2}) already exists")
+        if self.find_edge(v1, v2) is not False:
+            raise ValueError(f"Edge ({v1}, {v2}) already exists")
 
         # edge does not exist yet
         # add reference in edges
-        self.edges[(key1, key2)] = kwargs
+        self.edges[(v1, v2)] = kwargs
 
         # add reference in vertices
         # undirected graph only uses "out" list
-        self.vertices[key1]["out"].add(key2)
-        self.vertices[key2]["out"].add(key1)
+        self.vertices[v1]["out"].add(v2)
+        self.vertices[v2]["out"].add(v1)
 
-    def remove_edge(self, key1, key2):
+    def remove_edge(self, v1, v2):
 
         # check if edge exists
-        e = self.find_edge(key1, key2)
+        e = self.find_edge(v1, v2)
         if e is False:
-            raise ValueError(f"Edge ({key1}, {key2}) does not exist")
+            raise ValueError(f"Edge ({v1}, {v2}) does not exist")
 
         # edge exists
         del e
 
         # remove edge in adjacency lists
-        self.vertices[key1]["out"].remove(key2)
-        self.vertices[key2]["out"].remove(key1)
+        self.vertices[v1]["out"].remove(v2)
+        self.vertices[v2]["out"].remove(v1)
 
-        return (key1, key2)
+        return (v1, v2)
 
-    def set_vertex_field(self, key, **kwargs):
+    def set_vertex_field(self, v, **kwargs):
 
-        if key not in self.vertices:
-            raise ValueError(f"Vertex with key {key} does not exist")
+        if v not in self.vertices:
+            raise ValueError(f"Vertex {v} does not exist")
 
-        self.vertices[key].update(kwargs)
+        self.vertices[v].update(kwargs)
 
-    def get_vertex_field(self, key, field):
+    def get_vertex_field(self, v, field):
 
-        if key not in self.vertices:
-            raise ValueError(f"Vertex with key {key} does not exist")
+        if v not in self.vertices:
+            raise ValueError(f"Vertex {v} does not exist")
 
-        return self.vertices[key][field]
+        return self.vertices[v][field]
 
-    def get_edge_field(self, key1, key2, field):
+    def get_edge_field(self, v1, v2, field):
 
-        e = self.find_edge(key1, key2)
+        e = self.find_edge(v1, v2)
         if e is False:
-            raise ValueError(f"Edge ({key1}, {key2}) does not exist")
+            raise ValueError(f"Edge ({v1}, {v2}) does not exist")
 
         try:
             return e[field]
         except KeyError:
-            raise ValueError(f"Edge ({key1}, {key2}) does not have field: '{field}'")
+            raise ValueError(f"Edge ({v1}, {v2}) does not have field: '{field}'")
 
-    def set_edge_field(self, key1, key2, **kwargs):
+    def set_edge_field(self, v1, v2, **kwargs):
 
-        e = self.find_edge(key1, key2)
+        e = self.find_edge(v1, v2)
         if e is False:
-            raise ValueError(f"Edge ({key1}, {key2}) does not exist")
+            raise ValueError(f"Edge ({v1}, {v2}) does not exist")
 
         e.update(kwargs)
 
-    def areAdjacent(self, key1, key2):
-        return 
+    def in_degree(self, v):
+        return len(self.vertices[v]["in"])
 
-    def get_incident_edges(self, key):
-        return self.get_outgoing_edges(key) + self.get_incoming_edges(key)
+    def out_degree(self, v):
+        return len(self.vertices[v]["out"])
 
-    def get_outgoing_edges(self, key):
-        return [(key, destination) for destination in self.vertices[key]["out"]]
+    def incident_edges(self, v):
+        return self.outgoing_edges(v) + self.incoming_edges(v)
 
-    def get_incoming_edges(self, key):
-        return [(origin, key) for origin in self.vertices[key]["in"]]
+    def outgoing_edges(self, v):
+        return [(v, destination) for destination in self.vertices[v]["out"]]
+
+    def incoming_edges(self, v):
+        return [(origin, v) for origin in self.vertices[v]["in"]]
+
+    def opposite(self, v, e):
+        return e[0] if v == e[1] else e[1]
 
     def get_vertices(self):
-        return self.vertices.keys()
+        return list(self.vertices)
 
     def get_edges(self):
-        return self.edges.keys()
+        return list(self.edges)
 
     def iterator_dfs(self):
         # todo
-        return []
+        return iter(list(self.vertices))
 
     def iterator_bfs(self):
         # todo
-        return []
+        return iter(list(self.vertices))
 
     def is_connected(self):
         # todo
@@ -163,12 +175,12 @@ class AdjacencyListGraph:
             return "The graph is empty."
 
         output = "\nVertices:\n"
-        for vertex, fields in self.vertices.items():
-            output += f"{vertex}, {fields}\n"
+        for v, fields in self.vertices.items():
+            output += f"{v}, {fields}\n"
 
         output += "\nEdges:\n"
 
-        for edge, fields in self.edges.items():
-            output += f"{edge}, {fields}\n"
+        for e, fields in self.edges.items():
+            output += f"{e}, {fields}\n"
 
         return output
