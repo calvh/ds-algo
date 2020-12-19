@@ -16,6 +16,7 @@ g.add_edge(4, 5, weight=5)
 g.add_edge(4, 6, weight=4)
 g.add_edge(5, 6, weight=-2)
 
-dag_shortest(g, 1)
+distances = dag_shortest(g, 1)
 
 print(g)
+print(distances)

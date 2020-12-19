@@ -13,26 +13,16 @@ class PrioritizedItem:
 
 def dijkstra_shortest(g, v):
 
-    # todo store distance in dictionary
-
-    # convenience functions
-    def get_distance(vertex):
-        return g.get_vertex_field(vertex, "distance")
-
-    def set_distance(vertex, distance):
-        g.set_vertex_field(vertex, distance=distance)
-
-    def get_weight(vertex1, vertex2):
-        return g.get_edge_field(vertex1, vertex2, "weight")
-
     # priority queue
     pq = []
 
+    distances = {}
+
     for vertex in g.get_vertices():
-        set_distance(vertex, math.inf)
+        distances[vertex] = math.inf
         heappush(pq, PrioritizedItem(math.inf, vertex))
 
-    set_distance(v, 0)
+    distances[v] = 0
 
     while pq:
 
@@ -46,7 +36,7 @@ def dijkstra_shortest(g, v):
             z_loc = -1
 
             # look for z in pq
-            # todo upgrade to binary search
+            # todo upgrade to heap search
             for i in range(len(pq)):
                 if pq[i].vertex == z:
                     z_loc = i
@@ -55,13 +45,12 @@ def dijkstra_shortest(g, v):
             # z is in pq
             if z_loc != -1:
 
-                new_distance = get_distance(u) + get_weight(u, z)
+                new_distance = distances[u] + g.get_edge_field(u, z, "weight")
 
                 # perform relaxation on z
-                if new_distance < get_distance(z):
-                    set_distance(z, new_distance)
+                if new_distance < distances[z]:
+                    distances[z] = new_distance
                     pq[z_loc] = PrioritizedItem(new_distance, z)
                     heapify(pq)
 
-        # todo print output after each iteration if necessary
-        # print(g)
+    return distances

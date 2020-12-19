@@ -25,9 +25,11 @@ g_negative_cycle.set_edge_field("D", "F", weight=-5)
 g_negative_cycle.set_edge_field("F", "C", weight=-9)
 
 # acyclic
-bellman_ford_shortest(g_acyclic, "A")
+acyclic_distances = bellman_ford_shortest(g_acyclic, "A")
+print(acyclic_distances)
 print(g_acyclic)
 
 # negative-weight cycle
-print(bellman_ford_shortest(g_negative_cycle, "A"))
+negative_cycle_distances = bellman_ford_shortest(g_negative_cycle, "A")
+print(negative_cycle_distances)
 print(g_negative_cycle)

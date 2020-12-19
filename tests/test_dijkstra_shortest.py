@@ -19,6 +19,7 @@ g.add_edge("E", "G", weight=6)
 g.add_edge("F", "H", weight=10)
 g.add_edge("F", "I", weight=2)
 
-dijkstra_shortest(g, "A")
+distances = dijkstra_shortest(g, "A")
 
 print(g)
+print(distances)
