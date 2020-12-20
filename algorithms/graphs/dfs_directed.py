@@ -28,6 +28,7 @@ def dfs_directed_at(g, v):
                 # explored but inactive
                 g.set_edge_field(*e, label="forward/crossedge")  # descendant or sibling
 
+    g.set_vertex_field(v, explored=True, active=False)
+    
     return dfs_order
 
-    g.set_vertex_field(v, explored=True, active=False)
