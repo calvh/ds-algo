@@ -1,16 +1,16 @@
 class AdjacencyListGraph:
-    def __init__(self, vertices={}, edges={}):
+    def __init__(self):
 
         # vertices is a dictionary
-        # vertices: {key: {element: element, out: set()}}
-        # out: set({keys of vertices})
-        self.vertices = vertices
+        # vertices: {key: {element: element, in: set(), out: set()}}
+        # out: set(keys of vertices)
+        self.vertices = {}
 
         # edges is a dictionary indexed using tuples
         # e.g. self.edges: {(v1, v2): {......}}
         # for an undirected graph {(v1, v2) and {(v2, v1) are equivalent
         # undirected edges may be stored as (key1, key2) or (key2, key1)
-        self.edges = edges
+        self.edges = {}
 
     def add_vertex(self, *args, **kwargs):
 
