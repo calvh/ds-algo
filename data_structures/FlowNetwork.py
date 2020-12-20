@@ -1,19 +1,25 @@
 from data_structures.AdjacencyListDigraph import *
+from copy import deepcopy
 
 
 class FlowNetwork(AdjacencyListDigraph):
     """Flow network implemented using an adjacency-list-based graph"""
 
-    def __init__(self, digraph, capacities, source, sink):
-
-        self.vertices = digraph.vertices
-        self.edges = digraph.edges
-
+    def __init__(self, digraph, capacities, source, sink, flow=None):
+        
         self.source = source
         self.sink = sink
 
+        # deepcopy to reduce probability of errors
+
+        self.vertices = deepcopy(digraph).vertices
+        self.edges = deepcopy(digraph).edges
+
         # the capacity function specified in the parameter capacities is a dictionary which maps edges (tuples) to capacities
-        self.capacities = capacities
+        self.capacities = deepcopy(capacities)
+
+        # allow user to set initial flow
+        self.flow = {} if flow is None else deepcopy(flow)
 
     def set_capacity(self, v1, v2, c):
 
@@ -31,7 +37,7 @@ class FlowNetwork(AdjacencyListDigraph):
             raise ValueError(
                 f"Flow cannot exceed capacity of {self.capacities[(v1, v2)]}"
             )
-        self.set_edge_field(v1, v2, flow=f)
+        self.flow[(v1, v2)] = f
 
     def get_flow(self, v1, v2):
-        return self.get_edge_field(v1, v2, "flow")
+        return self.flow[(v1, v2)]
