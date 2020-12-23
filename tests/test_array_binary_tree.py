@@ -20,11 +20,13 @@ def printIter(iterator):
 
     output = ""
 
-    try:
-        while True:
-            output += f"{next(iterator)}, "
-    except StopIteration:
-        print(output[: len(output) - 2])
+    for count, value in enumerate(iterator):
+        if count == tree1.size() - 1:
+            output += f"{value}"
+        else:
+            output += f"{value}, "
+
+    print(output)
 
 
 printIter(tree1.iter_pre_order())
