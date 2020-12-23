@@ -8,7 +8,7 @@ import math
 @dataclass(order=True)
 class PrioritizedItem:
     priority: int
-    vertex: Any = field(compare=False)
+    vertex: Any = field(compare=False) # don't include this field in comparisons
 
 
 def dijkstra_shortest(g, v):
