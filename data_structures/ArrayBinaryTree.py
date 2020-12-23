@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import List, Any
 
 
 @dataclass
@@ -12,18 +11,11 @@ class ArrayBinaryTree:
 
     tree: list = field(default_factory=list)
     count: int = field(init=False)
-    root: Any = field(init=False)
 
     def __post_init__(self):
         self.count = len(self.tree)
 
-        if len(self.tree) > 0:
-            self.root = self.tree[0]
-
     def root(self):
-        if self.is_empty() is True:
-            return "The tree is empty."
-
         return self.tree[0]
 
     def is_root(self, v):
@@ -40,16 +32,31 @@ class ArrayBinaryTree:
         # todo see if there is a more efficient way to implement this
         try:
             return self.tree.index(v)
-        except IndexError:
+        except ValueError:
             raise ValueError(f"Node {v} does not exist.")
 
     def left_child(self, v):
-        return tree[2 * self.index_of(v) + 1]
+
+        i = 2 * self.index_of(v) + 1
+
+        if i > self.count - 1:
+            return None
+
+        return self.tree[i]
 
     def right_child(self, v):
-        return tree[2 * self.index_of(v) + 2]
+
+        i = 2 * self.index_of(v) + 2
+
+        if i > self.count - 1:
+            return None
+
+        return self.tree[i]
 
     def sibling(self, v):
+
+        if self.is_root(v) is True:
+            return None
 
         # check if left or right child
         i = self.index_of(v)
@@ -62,21 +69,19 @@ class ArrayBinaryTree:
             return self.tree[i + 1]
 
     def parent(self, v):
+
+        if self.is_root(v) is True:
+            return None
+
         # floor division
         return self.tree[(self.index_of(v) - 1) // 2]
 
     def children(self, v):
+
         i = self.index_of(v)
 
-        try:
-            left = self.tree[2 * i + 1]
-        except IndexError:
-            left = None
-
-        try:
-            right = self.tree[2 * i + 2]
-        except IndexError:
-            right = None
+        left = self.left_child(v)
+        right = self.right_child(v)
 
         result = []
 
